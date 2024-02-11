@@ -33,7 +33,6 @@ public class PlayerControlSystem implements IEntityProcessingService {
             }
             if (gameData.getKeys().isPressed(GameKeys.SPACE)) {
                 for (BulletSPI bulletSPI : getBulletSPIs()) {
-                    System.out.println("Creating bullet");
                     Entity bullet = bulletSPI.createBullet(player, gameData);
                     world.addEntity(bullet);
                 }

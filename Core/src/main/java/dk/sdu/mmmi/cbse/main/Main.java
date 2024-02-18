@@ -119,6 +119,12 @@ public class Main extends Application {
 //            postEntityProcessorService.process(gameData, world);
 //        }
     }
+    @Override
+    public void stop() {
+        for (IGamePluginService iGamePlugin : getPluginServices()) {
+            iGamePlugin.stop(gameData, world);
+        }
+    }
 
     private void draw() {
 

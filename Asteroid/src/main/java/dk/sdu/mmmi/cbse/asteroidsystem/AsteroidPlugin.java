@@ -12,20 +12,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class AsteroidPlugin implements IGamePluginService {
-    private double[] asteroidPolygon = new double[]{
-            -6, 1.5,   // Point 1
-            -4, 4.5,   // Point 2
-            0, 4.5,    // Point 3
-            1.5, 7,    // Point 4
-            3, 5,      // Point 5
-            5, 1.5,    // Point 6
-            3.5, -2,   // Point 7
-            2.5, -5,   // Point 8
-            -1, -6.5,  // Point 9
-            -3.5, -5.5,// Point 10
-            -5, -1,    // Point 11
-            -3.5, -2.5 // Point 12
-    };
+
     private Timer timer;
     private Random random = new Random();
 
@@ -51,8 +38,7 @@ public class AsteroidPlugin implements IGamePluginService {
     private Entity createAsteroid(GameData gameData) {
         int asteroidLevel = random.nextInt(3);
         Asteroid asteroid = new Asteroid(asteroidLevel);
-        double[] coordinates = Arrays.stream(asteroidPolygon).map(i -> i * Math.pow(2, asteroidLevel)).toArray();
-        asteroid.setPolygonCoordinates(coordinates);
+        asteroid.setPolygonCoordinates(asteroid.getAsteroidPolygon());
 
         int edge = random.nextInt(4);
 

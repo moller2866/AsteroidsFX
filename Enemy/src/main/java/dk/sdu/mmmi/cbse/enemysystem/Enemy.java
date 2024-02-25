@@ -5,7 +5,7 @@ import dk.sdu.mmmi.cbse.common.data.Entity;
 public class Enemy extends Entity {
 
     public Enemy() {
-        life = 10;
+        life = 1;
         new Thread(() -> {
             while (life > 0) {
                 try {

@@ -17,10 +17,6 @@ public class EnemyControlSystem implements IEntityProcessingService {
     @Override
     public void process(GameData gameData, World world) {
         for (Entity enemy : world.getEntities(Enemy.class)) {
-            if (enemy.getLife() <= 0) {
-                world.removeEntity(enemy);
-                return;
-            }
             if (enemy.getTimeAlive() > 10) {
                 System.out.println("TIMES UP! ENEMY GONE!");
                 world.removeEntity(enemy);

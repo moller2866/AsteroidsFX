@@ -1,8 +1,8 @@
 package dk.sdu.mmmi.cbse.common.asteroid;
 
 import dk.sdu.mmmi.cbse.common.data.Entity;
+import dk.sdu.mmmi.cbse.common.data.World;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Asteroid extends Entity {
@@ -39,8 +39,20 @@ public class Asteroid extends Entity {
         }).start();
     }
 
-    public double[] getAsteroidPolygon() {
-        return Arrays.stream(asteroidPolygon).map(i -> i * Math.pow(2, level)).toArray();
+    public void setPolygonCoordinates() {
+        setPolygonCoordinates(Arrays.stream(asteroidPolygon).map(i -> i * Math.pow(2, level)).toArray());
     }
 
+    public void split(World world) {
+        if (level > 0) {
+            for (int i = 0; i < 2; i++) {
+                Asteroid asteroid = new Asteroid(level - 1);
+                asteroid.setPolygonCoordinates();
+                asteroid.setX(this.getX());
+                asteroid.setY(this.getY());
+                asteroid.setRotation(this.getRotation() + (i == 0 ? 45 : -45));
+                world.addEntity(asteroid);
+            }
+        }
+    }
 }

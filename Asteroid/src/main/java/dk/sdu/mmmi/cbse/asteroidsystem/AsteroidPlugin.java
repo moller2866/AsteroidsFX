@@ -38,7 +38,7 @@ public class AsteroidPlugin implements IGamePluginService {
     private Entity createAsteroid(GameData gameData) {
         int asteroidLevel = random.nextInt(3);
         Asteroid asteroid = new Asteroid(asteroidLevel);
-        asteroid.setPolygonCoordinates(asteroid.getAsteroidPolygon());
+        asteroid.setPolygonCoordinates();
 
         int edge = random.nextInt(4);
 

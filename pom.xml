@@ -91,9 +91,9 @@
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <!-- parent project should delete 'mods-mvn' -->
+        <profiles>
+            <profile>
+                <!-- parent project should delete 'mods-mvn' -->
             <id>parent-project</id>
             <activation>
                 <file>

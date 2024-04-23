@@ -8,13 +8,14 @@ import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ServiceLoader;
+import java.lang.module.ModuleFinder;
+import java.lang.module.ModuleReference;
+import java.lang.module.Configuration;
+import java.lang.module.ModuleDescriptor;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -32,10 +33,28 @@ public class Main extends Application {
     private final GameData gameData = new GameData();
     private final World world = new World();
     private final Map<Entity, Polygon> polygons = new ConcurrentHashMap<>();
-
+    private static ModuleLayer layer;
     private Pane gameWindow;
 
+    private static ModuleLayer createLayer() {
+        ModuleFinder finder = ModuleFinder.of(Paths.get("plugins"));
+        System.out.println(Paths.get("plugins"));
+        ModuleLayer parent = ModuleLayer.boot();
+
+        List<String> plugins = finder
+                .findAll()
+                .stream()
+                .map(ModuleReference::descriptor)
+                .map(ModuleDescriptor::name)
+                .collect(Collectors.toList());
+
+        Configuration cf = parent.configuration().resolve(finder, ModuleFinder.of(), plugins);
+        return parent.defineModulesWithOneLoader(cf, ClassLoader.getSystemClassLoader());
+    }
+
+
     public static void main(String[] args) {
+        layer = createLayer();
         launch(Main.class);
     }
 
@@ -119,6 +138,7 @@ public class Main extends Application {
             postEntityProcessorService.process(gameData, world);
         }
     }
+
     @Override
     public void stop() {
         for (IGamePluginService iGamePlugin : getPluginServices()) {

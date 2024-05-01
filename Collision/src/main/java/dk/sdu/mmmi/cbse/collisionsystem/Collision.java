@@ -36,13 +36,6 @@ public class Collision implements IPostEntityProcessingService {
     private void defaultCollision(Entity firstEntity, Entity secondEntity, World world) {
         firstEntity.setLife(firstEntity.getLife() - 1);
         secondEntity.setLife(secondEntity.getLife() - 1);
-
-        if (firstEntity.getLife() <= 0) {
-            world.removeEntity(firstEntity);
-        }
-        if (secondEntity.getLife() <= 0) {
-            world.removeEntity(secondEntity);
-        }
     }
 
     private boolean bulletParentCollision(Entity firstEntity, Entity secondEntity) {

@@ -10,6 +10,7 @@ import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import dk.sdu.mmmi.cbse.common.services.IScoreService;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -27,15 +28,17 @@ class Game {
     private final List<IGamePluginService> gamePluginServices;
     private final List<IEntityProcessingService> entityProcessingServiceList;
     private final List<IPostEntityProcessingService> postEntityProcessingServices;
+    private final List<IScoreService> scoreServices;
+    private Text text = new Text(10, 20, "Destroyed asteroids: 0");
 
-    Game(List<IGamePluginService> gamePluginServices, List<IEntityProcessingService> entityProcessingServiceList, List<IPostEntityProcessingService> postEntityProcessingServices) {
+    Game(List<IGamePluginService> gamePluginServices, List<IEntityProcessingService> entityProcessingServiceList, List<IPostEntityProcessingService> postEntityProcessingServices, List<IScoreService> scoreServices) {
         this.gamePluginServices = gamePluginServices;
         this.entityProcessingServiceList = entityProcessingServiceList;
         this.postEntityProcessingServices = postEntityProcessingServices;
+        this.scoreServices = scoreServices;
     }
 
     public void start(Stage window) throws Exception {
-        Text text = new Text(10, 20, "Destroyed asteroids: 0");
         gameWindow = new Pane();
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
         gameWindow.getChildren().add(text);
@@ -108,6 +111,20 @@ class Game {
         for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
             postEntityProcessorService.process(gameData, world);
         }
+        world.getEntities().forEach(entity -> {
+            if (entity.getLife() <= 0) {
+                world.removeEntity(entity);
+                if (entity.getClass().getSimpleName().equals("Asteroid")) {
+                    for (IScoreService scoreService : getScoreServices()) {
+                        scoreService.addToTotalScore(1L);
+                    }
+                }
+            }
+        });
+
+        for (IScoreService scoreService : getScoreServices()) {
+            text.setText("Destroyed asteroids: " + scoreService.getTotalScore());
+        }
     }
 
     private void draw() {
@@ -148,6 +165,10 @@ class Game {
 
     public List<IPostEntityProcessingService> getPostEntityProcessingServices() {
         return postEntityProcessingServices;
+    }
+
+    public List<IScoreService> getScoreServices() {
+        return scoreServices;
     }
 
 }

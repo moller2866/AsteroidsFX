@@ -25,7 +25,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
             updateEnemy(enemy, gameData);
 
             if (random.nextInt(1000) > 990) {
-                shoot(enemy, gameData, world);
+                shoot(enemy, world);
             }
         }
     }
@@ -53,9 +53,9 @@ public class EnemyControlSystem implements IEntityProcessingService {
 
     }
 
-    private void shoot(Entity enemy, GameData gameData, World world) {
+    private void shoot(Entity enemy, World world) {
         for (BulletSPI bulletSPI : getBulletSPIs()) {
-            Entity bullet = bulletSPI.createBullet(enemy, gameData);
+            Entity bullet = bulletSPI.createBullet(enemy);
             bullet.setX(enemy.getX());
             bullet.setY(enemy.getY());
             bullet.setRotation(random.nextInt(360));

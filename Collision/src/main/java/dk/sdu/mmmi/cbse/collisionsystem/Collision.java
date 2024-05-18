@@ -58,11 +58,11 @@ public class Collision implements IPostEntityProcessingService {
     private void asteroidCollision(Entity firstEntity, Entity secondEntity, World world) {
         if (firstEntity instanceof Asteroid) {
             Asteroid asteroid = (Asteroid) firstEntity;
-            asteroid.split(world);
+            asteroid.split().forEach(world::addEntity);
         }
         if (secondEntity instanceof Asteroid) {
             Asteroid asteroid = (Asteroid) secondEntity;
-            asteroid.split(world);
+            asteroid.split().forEach(world::addEntity);
         }
     }
 

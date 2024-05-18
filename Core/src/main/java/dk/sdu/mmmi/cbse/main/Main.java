@@ -8,10 +8,7 @@ import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,38 +41,10 @@ public class Main extends Application {
         Text text = new Text(10, 20, "Destroyed asteroids: 0");
         gameWindow = new Pane();
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
+        gameWindow.setStyle("-fx-background-color: black");
         gameWindow.getChildren().add(text);
 
-        Scene scene = new Scene(gameWindow);
-        scene.setOnKeyPressed(event -> {
-            if (event.getCode().equals(KeyCode.LEFT)) {
-                gameData.getKeys().setKey(GameKeys.LEFT, true);
-            }
-            if (event.getCode().equals(KeyCode.RIGHT)) {
-                gameData.getKeys().setKey(GameKeys.RIGHT, true);
-            }
-            if (event.getCode().equals(KeyCode.UP)) {
-                gameData.getKeys().setKey(GameKeys.UP, true);
-            }
-            if (event.getCode().equals(KeyCode.SPACE)) {
-                gameData.getKeys().setKey(GameKeys.SPACE, true);
-            }
-        });
-        scene.setOnKeyReleased(event -> {
-            if (event.getCode().equals(KeyCode.LEFT)) {
-                gameData.getKeys().setKey(GameKeys.LEFT, false);
-            }
-            if (event.getCode().equals(KeyCode.RIGHT)) {
-                gameData.getKeys().setKey(GameKeys.RIGHT, false);
-            }
-            if (event.getCode().equals(KeyCode.UP)) {
-                gameData.getKeys().setKey(GameKeys.UP, false);
-            }
-            if (event.getCode().equals(KeyCode.SPACE)) {
-                gameData.getKeys().setKey(GameKeys.SPACE, false);
-            }
-
-        });
+        Scene scene = getScene();
 
         // Lookup all Game Plugins using ServiceLoader
         for (IGamePluginService iGamePlugin : getPluginServices()) {
@@ -84,6 +53,7 @@ public class Main extends Application {
         for (Entity entity : world.getEntities()) {
             Polygon polygon = new Polygon(entity.getPolygonCoordinates());
             polygons.put(entity, polygon);
+            polygon.setFill(new javafx.scene.paint.Color(1, 1, 1, 1));
             gameWindow.getChildren().add(polygon);
         }
 
@@ -93,6 +63,44 @@ public class Main extends Application {
         window.setTitle("ASTEROIDS");
         window.show();
 
+    }
+
+    private Scene getScene() {
+        Scene scene = new Scene(gameWindow);
+        scene.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case LEFT:
+                    gameData.getKeys().setKey(GameKeys.LEFT, true);
+                    break;
+                case RIGHT:
+                    gameData.getKeys().setKey(GameKeys.RIGHT, true);
+                    break;
+                case UP:
+                    gameData.getKeys().setKey(GameKeys.UP, true);
+                    break;
+                case SPACE:
+                    gameData.getKeys().setKey(GameKeys.SPACE, true);
+                    break;
+            }
+        });
+        scene.setOnKeyReleased(event -> {
+            switch (event.getCode()) {
+                case LEFT:
+                    gameData.getKeys().setKey(GameKeys.LEFT, false);
+                    break;
+                case RIGHT:
+                    gameData.getKeys().setKey(GameKeys.RIGHT, false);
+                    break;
+                case UP:
+                    gameData.getKeys().setKey(GameKeys.UP, false);
+                    break;
+                case SPACE:
+                    gameData.getKeys().setKey(GameKeys.SPACE, false);
+                    break;
+            }
+
+        });
+        return scene;
     }
 
     private void render() {
@@ -139,6 +147,7 @@ public class Main extends Application {
             Polygon polygon = polygons.get(entity);
             if (polygon == null) {
                 polygon = new Polygon(entity.getPolygonCoordinates());
+                polygon.setFill(new javafx.scene.paint.Color(1, 1, 1, 1));
                 polygons.put(entity, polygon);
                 gameWindow.getChildren().add(polygon);
             }
